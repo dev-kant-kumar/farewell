@@ -1,0 +1,228 @@
+import { Calendar, Clock, MapPin } from "lucide-react";
+import { useEffect, useState } from "react";
+
+const CountdownTimer = () => {
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+  const [isEventDay, setIsEventDay] = useState(false);
+  const [prevTime, setPrevTime] = useState({});
+
+  // Get event date from environment or set default
+  const eventDate = new Date(
+    import.meta.env.VITE_EVENT_DATE || "2024-12-31T20:00:00"
+  );
+
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const now = new Date().getTime();
+      const eventTime = eventDate.getTime();
+      const difference = eventTime - now;
+
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor(
+          (difference % (1000 * 60 * 60)) / (1000 * 60)
+        );
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        setPrevTime(timeLeft);
+        setTimeLeft({ days, hours, minutes, seconds });
+      } else {
+        setIsEventDay(true);
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      }
+    };
+
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000);
+
+    return () => clearInterval(timer);
+  }, [eventDate, timeLeft]);
+
+  const TimeCard = ({ value, label, previousValue }) => {
+    const hasChanged = previousValue !== undefined && previousValue !== value;
+
+    return (
+      <div className="relative">
+        <div className="bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-2xl">
+          {/* Glow effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-pink-400/20 rounded-2xl blur-xl opacity-75"></div>
+
+          <div className="relative z-10">
+            {/* Number */}
+            <div
+              className={`text-5xl md:text-7xl font-bold text-center mb-2 transition-all duration-500 ${
+                hasChanged ? "animate-pulse text-yellow-400" : "text-white"
+              }`}
+            >
+              {String(value).padStart(2, "0")}
+            </div>
+
+            {/* Label */}
+            <div className="text-center text-sm md:text-base font-medium text-gray-300 uppercase tracking-wider">
+              {label}
+            </div>
+
+            {/* Separator dots */}
+            {label !== "Seconds" && (
+              <div className="absolute -right-3 top-1/2 transform -translate-y-1/2 hidden md:block">
+                <div className="flex flex-col space-y-1">
+                  <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                  <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse delay-500"></div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Reflection effect */}
+        <div className="absolute inset-x-0 -bottom-6 h-6 bg-gradient-to-br from-white/10 to-transparent rounded-2xl blur-sm opacity-50 transform scale-y-[-1]"></div>
+      </div>
+    );
+  };
+
+  if (isEventDay) {
+    return (
+      <section className="py-20 px-6 relative" id="countdown">
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Celebration Animation */}
+          <div className="mb-8">
+            <div className="relative inline-block">
+              <div className="text-8xl animate-bounce">🎉</div>
+              <div className="absolute inset-0 animate-ping">
+                <div className="text-8xl opacity-75">🎉</div>
+              </div>
+            </div>
+          </div>
+
+          <h2 className="text-6xl font-bold bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent mb-6">
+            It's Time!
+          </h2>
+          <p className="text-2xl text-white">
+            The farewell celebration is here! 🥳
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="py-20 px-6 relative overflow-hidden" id="countdown">
+      {/* Background Effects */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-10 right-10 w-40 h-40 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-full blur-3xl animate-pulse delay-2000 -translate-x-1/2 -translate-y-1/2"></div>
+      </div>
+
+      <div className="relative z-10 max-w-6xl mx-auto">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <Clock className="w-8 h-8 text-yellow-400 animate-spin" />
+            <h2 className="text-5xl font-bold bg-gradient-to-r from-yellow-400 to-pink-500 bg-clip-text text-transparent">
+              Countdown to Farewell
+            </h2>
+            <Clock className="w-8 h-8 text-yellow-400 animate-spin" />
+          </div>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            Every second counts until we celebrate together
+          </p>
+        </div>
+
+        {/* Countdown Display */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-12">
+          <TimeCard
+            value={timeLeft.days}
+            label="Days"
+            previousValue={prevTime.days}
+          />
+          <TimeCard
+            value={timeLeft.hours}
+            label="Hours"
+            previousValue={prevTime.hours}
+          />
+          <TimeCard
+            value={timeLeft.minutes}
+            label="Minutes"
+            previousValue={prevTime.minutes}
+          />
+          <TimeCard
+            value={timeLeft.seconds}
+            label="Seconds"
+            previousValue={prevTime.seconds}
+          />
+        </div>
+
+        {/* Event Quick Info */}
+        <div className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-2xl">
+          <div className="grid md:grid-cols-3 gap-6 text-center">
+            <div className="flex flex-col items-center">
+              <Calendar className="w-8 h-8 text-yellow-400 mb-3" />
+              <h3 className="text-lg font-semibold text-white mb-1">Date</h3>
+              <p className="text-gray-300">
+                {eventDate.toLocaleDateString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <Clock className="w-8 h-8 text-pink-400 mb-3" />
+              <h3 className="text-lg font-semibold text-white mb-1">Time</h3>
+              <p className="text-gray-300">
+                {eventDate.toLocaleTimeString("en-US", {
+                  hour: "numeric",
+                  minute: "2-digit",
+                  hour12: true,
+                })}
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <MapPin className="w-8 h-8 text-purple-400 mb-3" />
+              <h3 className="text-lg font-semibold text-white mb-1">Venue</h3>
+              <p className="text-gray-300">Grand Ballroom</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="mt-12">
+          <div className="bg-white/10 rounded-full h-3 overflow-hidden backdrop-blur-sm">
+            <div
+              className="h-full bg-gradient-to-r from-yellow-400 to-pink-500 transition-all duration-1000 ease-out relative"
+              style={{
+                width: `${Math.max(
+                  0,
+                  Math.min(
+                    100,
+                    ((new Date().getTime() -
+                      (eventDate.getTime() - 30 * 24 * 60 * 60 * 1000)) /
+                      (30 * 24 * 60 * 60 * 1000)) *
+                      100
+                  )
+                )}%`,
+              }}
+            >
+              <div className="absolute inset-0 bg-white/30 animate-pulse"></div>
+            </div>
+          </div>
+          <p className="text-center text-gray-400 text-sm mt-2">
+            Event Progress
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default CountdownTimer;

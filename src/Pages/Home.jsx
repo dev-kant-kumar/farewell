@@ -1,13 +1,9 @@
-import React from "react";
-import Hero from "../components/Hero";
-import InvitationGenerator from "../components/InvitationGenerator";
+import BackgroundEffects from "../components/BackgroundEffects";
 import CountdownTimer from "../components/CountdownTimer";
 import EventInfo from "../components/EventInfo";
-import MemoryWall from "../components/MemoryWall";
-import PhotoGallery from "../components/PhotoGallery";
-import RSVPSection from "../components/RSVPSection";
 import FloatingParticles from "../components/FloatingParticles";
-import BackgroundEffects from "../components/BackgroundEffects";
+import Hero from "../components/Hero";
+import InvitationGenerator from "../components/InvitationGenerator";
 
 const Home = () => {
   return (
@@ -21,9 +17,9 @@ const Home = () => {
       <InvitationGenerator />
       <CountdownTimer />
       <EventInfo />
-      {/* <PhotoGallery />
-      <MemoryWall />
-      <RSVPSection /> */}
+      {/* <PhotoGallery /> */}
+      {/* <MemoryWall /> */}
+      {/* <RSVPSection /> */}
     </div>
   );
 };

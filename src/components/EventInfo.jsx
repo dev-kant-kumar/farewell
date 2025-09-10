@@ -1,18 +1,15 @@
-import React, { useState } from "react";
 import {
-  MapPin,
-  Clock,
-  Calendar,
-  Users,
-  Music,
   Camera,
+  Clock,
   Gift,
-  Car,
-  Phone,
-  Mail,
+  MapPin,
+  Music,
   Navigation,
+  Phone,
   Thermometer,
+  Users,
 } from "lucide-react";
+import { useState } from "react";
 
 const EventInfo = () => {
   const [activeTab, setActiveTab] = useState("venue");
@@ -20,9 +17,13 @@ const EventInfo = () => {
 
   const eventDetails = {
     venue: {
-      name: "The Grand Ballroom",
-      address: "123 Celebration Avenue, Downtown City",
-      capacity: "200 guests",
+      name: "Mehfil Banquet",
+      address: `Bali Complex,
+Near Royal Enfield Showroom,
+V.B.U
+Sindoor, NH-33,
+Hazaribag`,
+      capacity: "250+ guests",
       features: [
         "Air Conditioned",
         "Parking Available",
@@ -120,13 +121,6 @@ const EventInfo = () => {
             active={activeTab === "dresscode"}
             onClick={setActiveTab}
           />
-          <TabButton
-            id="travel"
-            label="Travel Info"
-            icon={Car}
-            active={activeTab === "travel"}
-            onClick={setActiveTab}
-          />
         </div>
 
         {/* Tab Content */}
@@ -174,17 +168,7 @@ const EventInfo = () => {
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <Phone className="w-4 h-4 text-blue-400" />
-                      <span className="text-gray-300">+1 (555) 123-4567</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Mail className="w-4 h-4 text-green-400" />
-                      <span className="text-gray-300">
-                        events@grandballroom.com
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Navigation className="w-4 h-4 text-purple-400" />
-                      <span className="text-gray-300">Get Directions</span>
+                      <span className="text-gray-300">+91 95725 96395</span>
                     </div>
                   </div>
                 </InfoCard>
@@ -209,14 +193,13 @@ const EventInfo = () => {
                       </div>
                     ) : (
                       <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3024.1234567890123!2d-74.0059728!3d40.7128!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQyJzQ2LjEiTiA3NMKwMDAnMjEuNSJX!5e0!3m2!1sen!2sus!4v1234567890123"
-                        width="100%"
-                        height="100%"
+                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7288.404618036583!2d85.378204!3d24.02393!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f49dbb8b09501b%3A0x4ab356742bc1c29a!2sMEHFIL%20BANQUET!5e0!3m2!1sen!2sin!4v1757496069291!5m2!1sen!2sin"
+                        width="600"
+                        height="450"
                         style={{ border: 0 }}
                         allowFullScreen
                         loading="lazy"
                         referrerPolicy="no-referrer-when-downgrade"
-                        className="rounded-xl"
                       />
                     )}
                   </div>
@@ -310,44 +293,6 @@ const EventInfo = () => {
                       keeping it elegant and celebration-appropriate!
                     </p>
                   </div>
-                </div>
-              </InfoCard>
-            </div>
-          )}
-
-          {/* Travel Info Tab */}
-          {activeTab === "travel" && (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fadeIn">
-              <InfoCard icon={Car} title="Parking">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-green-400">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                    <span>Free valet parking</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-green-400">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                    <span>200+ parking spots</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-blue-400">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                    <span>EV charging stations</span>
-                  </div>
-                </div>
-              </InfoCard>
-
-              <InfoCard icon={Navigation} title="Public Transit">
-                <div className="space-y-3 text-gray-300">
-                  <p>Metro Station: Downtown Central</p>
-                  <p>Bus Lines: 15, 23, 42</p>
-                  <p>Walking distance: 2 blocks</p>
-                </div>
-              </InfoCard>
-
-              <InfoCard icon={Phone} title="Ride Sharing">
-                <div className="space-y-3 text-gray-300">
-                  <p>Drop-off zone available</p>
-                  <p>Pickup area designated</p>
-                  <p>Estimated wait: 3-5 mins</p>
                 </div>
               </InfoCard>
             </div>

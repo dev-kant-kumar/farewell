@@ -11,10 +11,15 @@ const CountdownTimer = () => {
   const [isEventDay, setIsEventDay] = useState(false);
   const [prevTime, setPrevTime] = useState({});
 
-  // Get event date from environment or set default
-  const eventDate = new Date(
-    import.meta.env.VITE_EVENT_DATE || "2024-12-31T20:00:00"
-  );
+  // Calculate tomorrow at 11 AM
+  const getEventDate = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(11, 0, 0, 0); // Set to 11:00:00 AM
+    return tomorrow;
+  };
+
+  const [eventDate] = useState(() => getEventDate());
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -32,8 +37,10 @@ const CountdownTimer = () => {
         );
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
+        const newTimeLeft = { days, hours, minutes, seconds };
+
         setPrevTime(timeLeft);
-        setTimeLeft({ days, hours, minutes, seconds });
+        setTimeLeft(newTimeLeft);
       } else {
         setIsEventDay(true);
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -44,7 +51,7 @@ const CountdownTimer = () => {
     const timer = setInterval(calculateTimeLeft, 1000);
 
     return () => clearInterval(timer);
-  }, [eventDate, timeLeft]);
+  }, []); // Removed dependencies to prevent infinite re-renders
 
   const TimeCard = ({ value, label, previousValue }) => {
     const hasChanged = previousValue !== undefined && previousValue !== value;
@@ -105,16 +112,17 @@ const CountdownTimer = () => {
           <h2 className="text-6xl font-bold bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent mb-6">
             It's Time!
           </h2>
-          <p className="text-2xl text-white">
-            The farewell celebration is here! 🥳
-          </p>
+          <p className="text-2xl text-white">The event is here! 🥳</p>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="py-20 px-6 relative overflow-hidden" id="countdown">
+    <section
+      className="py-20 px-6 relative overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen"
+      id="countdown"
+    >
       {/* Background Effects */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-3xl animate-pulse"></div>
@@ -128,12 +136,12 @@ const CountdownTimer = () => {
           <div className="flex items-center justify-center gap-3 mb-6">
             <Clock className="w-8 h-8 text-yellow-400 animate-spin" />
             <h2 className="text-5xl font-bold bg-gradient-to-r from-yellow-400 to-pink-500 bg-clip-text text-transparent">
-              Countdown to Farewell
+              Countdown to Tomorrow
             </h2>
             <Clock className="w-8 h-8 text-yellow-400 animate-spin" />
           </div>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Every second counts until we celebrate together
+            Every second counts until 11:00 AM tomorrow
           </p>
         </div>
 
@@ -189,8 +197,8 @@ const CountdownTimer = () => {
             </div>
             <div className="flex flex-col items-center">
               <MapPin className="w-8 h-8 text-purple-400 mb-3" />
-              <h3 className="text-lg font-semibold text-white mb-1">Venue</h3>
-              <p className="text-gray-300">Grand Ballroom</p>
+              <h3 className="text-lg font-semibold text-white mb-1">Event</h3>
+              <p className="text-gray-300">Tomorrow at 11 AM</p>
             </div>
           </div>
         </div>
@@ -206,8 +214,8 @@ const CountdownTimer = () => {
                   Math.min(
                     100,
                     ((new Date().getTime() -
-                      (eventDate.getTime() - 30 * 24 * 60 * 60 * 1000)) /
-                      (30 * 24 * 60 * 60 * 1000)) *
+                      (eventDate.getTime() - 24 * 60 * 60 * 1000)) /
+                      (24 * 60 * 60 * 1000)) *
                       100
                   )
                 )}%`,
@@ -217,7 +225,7 @@ const CountdownTimer = () => {
             </div>
           </div>
           <p className="text-center text-gray-400 text-sm mt-2">
-            Event Progress
+            Progress to Tomorrow 11 AM
           </p>
         </div>
       </div>

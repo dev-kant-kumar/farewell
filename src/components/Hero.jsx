@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { ChevronDown, Sparkles, Heart } from "lucide-react";
+import { ChevronDown, Heart, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -75,8 +75,18 @@ const Hero = () => {
           </p>
 
           {/* CTA Button */}
-          <button className="group relative px-12 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-bold text-lg rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-yellow-400/50 focus:outline-none focus:ring-4 focus:ring-yellow-400/50">
-            <span className="relative z-10">Create Your Invitation</span>
+          <button
+            onClick={() => {
+              const el = document.getElementById("invitation-generator");
+              if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+            }}
+            className="group relative px-12 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-bold text-lg rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-yellow-400/50 focus:outline-none focus:ring-4 focus:ring-yellow-400/50"
+          >
+            <span className="relative z-10 cursor-pointer">
+              Create Your Invitation
+            </span>
             <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </button>
         </div>

@@ -250,21 +250,20 @@ const InvitationGenerator = () => {
           <div style="
             position: relative;
             z-index: 10;
-            padding: 48px;
+            padding: 40px;
             height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             text-align: center;
             color: white;
             font-family: system-ui, -apple-system, sans-serif;
           ">
-            <!-- Header -->
-            <div style="flex-shrink: 0;">
-              <div style="display: flex; justify-content: center; margin-bottom: 32px;">
+            <!-- Header - Fixed -->
+            <div style="flex-shrink: 0; margin-bottom: 24px;">
+              <div style="display: flex; justify-content: center; margin-bottom: 24px;">
                 <div style="
-                  width: 120px;
-                  height: 120px;
+                  width: 100px;
+                  height: 100px;
                   background: rgba(255,255,255,0.2);
                   border-radius: 50%;
                   display: flex;
@@ -272,62 +271,64 @@ const InvitationGenerator = () => {
                   justify-content: center;
                   border: 3px solid rgba(255,255,255,0.3);
                   position: relative;
-                  font-size: 48px;
+                  font-size: 40px;
                 ">
                   🎉
                   <div style="
                     position: absolute;
-                    top: -12px;
-                    right: -12px;
-                    width: 48px;
-                    height: 48px;
+                    top: -8px;
+                    right: -8px;
+                    width: 36px;
+                    height: 36px;
                     background: linear-gradient(45deg, #fbbf24, #f97316);
                     border-radius: 50%;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-size: 24px;
+                    font-size: 18px;
                   ">✨</div>
                 </div>
               </div>
 
-              <h3 style="font-size: 48px; font-weight: 900; margin-bottom: 16px; letter-spacing: 3px;">YOU'RE INVITED</h3>
-              <div style="display: flex; align-items: center; justify-content: center; gap: 24px; margin-bottom: 32px;">
+              <h3 style="font-size: 40px; font-weight: 900; margin-bottom: 16px; letter-spacing: 2px;">YOU'RE INVITED</h3>
+              <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 24px;">
                 <div style="height: 2px; background: rgba(255,255,255,0.4); flex: 1;"></div>
-                <span style="font-size: 32px;">👑</span>
+                <span style="font-size: 24px;">👑</span>
                 <div style="height: 2px; background: rgba(255,255,255,0.4); flex: 1;"></div>
               </div>
             </div>
 
-            <!-- Guest Name -->
-            <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; margin: 32px 0;">
+            <!-- Guest Name - Flexible -->
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 20px 0;">
               <h4 style="
-                font-size: 42px;
+                font-size: 36px;
                 font-weight: 900;
-                margin-bottom: 24px;
+                margin-bottom: 16px;
                 word-wrap: break-word;
                 line-height: 1.2;
-                max-width: 100%;
-                overflow-wrap: break-word;
-                hyphens: auto;
+                max-height: 120px;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
               ">${guestName || "Your Name Here"}</h4>
-              <div style="width: 200px; height: 6px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent); margin: 0 auto;"></div>
+              <div style="width: 160px; height: 4px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent); margin: 0 auto;"></div>
 
               ${
                 personalMessage
                   ? `
                 <div style="
                   background: rgba(255,255,255,0.1);
-                  border-radius: 20px;
-                  padding: 24px;
+                  border-radius: 16px;
+                  padding: 20px;
                   border: 2px solid rgba(255,255,255,0.2);
-                  margin-top: 32px;
-                  max-height: 120px;
+                  margin-top: 24px;
+                  max-height: 100px;
                   overflow: hidden;
                 ">
-                  <p style="font-size: 18px; font-style: italic; line-height: 1.5; margin: 0;">${
-                    personalMessage.length > 120
-                      ? `"${personalMessage.substring(0, 120)}..."`
+                  <p style="font-size: 16px; font-style: italic; line-height: 1.4; margin: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">${
+                    personalMessage.length > 100
+                      ? `"${personalMessage.substring(0, 100)}..."`
                       : `"${personalMessage}"`
                   }</p>
                 </div>
@@ -336,27 +337,27 @@ const InvitationGenerator = () => {
               }
             </div>
 
-            <!-- Event Details -->
+            <!-- Event Details - Fixed -->
             <div style="flex-shrink: 0;">
               <div style="
                 background: rgba(255,255,255,0.15);
-                border-radius: 24px;
-                padding: 32px;
+                border-radius: 20px;
+                padding: 24px;
                 border: 2px solid rgba(255,255,255,0.2);
-                margin-bottom: 24px;
+                margin-bottom: 20px;
               ">
-                <h5 style="font-size: 28px; font-weight: bold; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 12px;">
+                <h5 style="font-size: 24px; font-weight: bold; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;">
                   🎁 FAREWELL CELEBRATION
                 </h5>
-                <p style="font-size: 18px; opacity: 0.8; margin: 0;">An Evening of Memories & New Beginnings</p>
+                <p style="font-size: 16px; opacity: 0.8; margin: 0;">An Evening of Memories & New Beginnings</p>
               </div>
 
               <div style="
-                font-size: 16px;
+                font-size: 14px;
                 opacity: 0.6;
                 background: rgba(0,0,0,0.2);
-                border-radius: 16px;
-                padding: 16px;
+                border-radius: 12px;
+                padding: 12px;
                 border: 1px solid rgba(255,255,255,0.1);
               ">
                 <p style="margin: 0; font-weight: 500;">🎓 Hosted by BCA (2023-25) for BCA (2022-25)</p>
@@ -429,7 +430,7 @@ const InvitationGenerator = () => {
   const TemplateIcon = currentTemplate.icon;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 relative overflow-hidden">
+    <div id="invitation-generator" className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0">
         <div className="absolute top-10 left-10 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -437,29 +438,29 @@ const InvitationGenerator = () => {
         <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
       </div>
 
-      <section className="py-20 px-6 relative z-10">
+      <section className="py-10 md:py-20 px-4 md:px-6 relative z-10">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-16">
-            <h1 className="text-7xl font-black bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent mb-6 animate-pulse">
+          <div className="text-center mb-8 md:mb-16">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent mb-4 md:mb-6 animate-pulse">
               ULTRA PREMIUM
             </h1>
-            <h2 className="text-4xl font-bold text-white mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-4">
               Invitation Designer
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto px-4">
               Create breathtaking, luxury invitation cards with Canva-level
               design quality
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-16 items-start">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
             {/* Controls */}
-            <div className="space-y-8">
+            <div className="space-y-6 md:space-y-8 order-2 lg:order-1">
               {/* Name Input */}
-              <div className="space-y-4">
-                <label className="flex items-center gap-3 text-xl font-bold text-white">
-                  <User className="w-6 h-6 text-yellow-400" />
+              <div className="space-y-3 md:space-y-4">
+                <label className="flex items-center gap-2 md:gap-3 text-lg md:text-xl font-bold text-white">
+                  <User className="w-5 h-5 md:w-6 md:h-6 text-yellow-400" />
                   Guest Name
                 </label>
                 <input
@@ -467,31 +468,31 @@ const InvitationGenerator = () => {
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
                   placeholder="Enter the guest's name"
-                  className="w-full px-8 py-6 bg-gradient-to-r from-white/10 to-white/5 border-2 border-white/20 rounded-2xl text-white placeholder-gray-400 backdrop-blur-xl focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400/30 focus:outline-none transition-all duration-500 text-lg font-medium"
+                  className="w-full px-4 md:px-8 py-4 md:py-6 bg-gradient-to-r from-white/10 to-white/5 border-2 border-white/20 rounded-xl md:rounded-2xl text-white placeholder-gray-400 backdrop-blur-xl focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400/30 focus:outline-none transition-all duration-500 text-base md:text-lg font-medium"
                 />
               </div>
 
               {/* Template Selector */}
-              <div className="space-y-6">
-                <label className="flex items-center gap-3 text-xl font-bold text-white">
-                  <Palette className="w-6 h-6 text-pink-400" />
+              <div className="space-y-4 md:space-y-6">
+                <label className="flex items-center gap-2 md:gap-3 text-lg md:text-xl font-bold text-white">
+                  <Palette className="w-5 h-5 md:w-6 md:h-6 text-pink-400" />
                   Premium Templates
                 </label>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                   {templates.map((template) => {
                     const Icon = template.icon;
                     return (
                       <button
                         key={template.id}
                         onClick={() => setSelectedTemplate(template.id)}
-                        className={`group relative p-6 rounded-2xl border-2 transition-all duration-500 transform hover:scale-105 ${
+                        className={`group relative p-4 md:p-6 rounded-xl md:rounded-2xl border-2 transition-all duration-500 transform hover:scale-105 ${
                           selectedTemplate === template.id
                             ? `${template.border} bg-gradient-to-br ${template.bg} shadow-2xl shadow-${template.particles}/20`
                             : "border-white/20 bg-white/5 hover:border-white/40 hover:bg-white/10"
                         }`}
                       >
                         <div
-                          className={`w-full h-20 rounded-xl bg-gradient-to-r ${template.primary} mb-4 relative overflow-hidden`}
+                          className={`w-full h-16 md:h-20 rounded-lg md:rounded-xl bg-gradient-to-r ${template.primary} mb-3 md:mb-4 relative overflow-hidden`}
                         >
                           <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"></div>
                           <div className="absolute top-2 right-2">
@@ -499,7 +500,7 @@ const InvitationGenerator = () => {
                           </div>
                         </div>
                         <span
-                          className={`font-bold text-sm ${
+                          className={`font-bold text-xs md:text-sm ${
                             selectedTemplate === template.id
                               ? template.accent
                               : "text-white"
@@ -522,13 +523,13 @@ const InvitationGenerator = () => {
 
               {/* Personal Message Display */}
               {personalMessage && (
-                <div className="space-y-4">
-                  <label className="flex items-center gap-3 text-xl font-bold text-white">
-                    <MessageCircle className="w-6 h-6 text-green-400" />
+                <div className="space-y-3 md:space-y-4">
+                  <label className="flex items-center gap-2 md:gap-3 text-lg md:text-xl font-bold text-white">
+                    <MessageCircle className="w-5 h-5 md:w-6 md:h-6 text-green-400" />
                     Personal Message
                   </label>
-                  <div className="p-6 bg-gradient-to-r from-white/10 to-white/5 border border-white/20 rounded-2xl backdrop-blur-xl">
-                    <p className="text-white/90 italic text-lg leading-relaxed">
+                  <div className="p-4 md:p-6 bg-gradient-to-r from-white/10 to-white/5 border border-white/20 rounded-xl md:rounded-2xl backdrop-blur-xl">
+                    <p className="text-white/90 italic text-base md:text-lg leading-relaxed">
                       "{personalMessage}"
                     </p>
                   </div>
@@ -536,32 +537,32 @@ const InvitationGenerator = () => {
               )}
 
               {/* Action Buttons */}
-              <div className="space-y-6">
+              <div className="space-y-4 md:space-y-6">
                 <button
                   onClick={handleGenerateCard}
                   disabled={!guestName.trim() || isGenerating}
-                  className="w-full py-6 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-black font-black text-xl rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed hover:from-yellow-500 hover:via-orange-600 hover:to-red-600 transform hover:scale-105 transition-all duration-500 flex items-center justify-center gap-4 shadow-2xl shadow-yellow-500/20"
+                  className="w-full py-4 md:py-6 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-black font-black text-lg md:text-xl rounded-xl md:rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed hover:from-yellow-500 hover:via-orange-600 hover:to-red-600 transform hover:scale-105 transition-all duration-500 flex items-center justify-center gap-3 md:gap-4 shadow-2xl shadow-yellow-500/20 cursor-pointer"
                 >
-                  <Send className="w-6 h-6" />
+                  <Send className="w-5 h-5 md:w-6 md:h-6" />
                   {isGenerating ? "Creating Magic..." : "Generate Premium Card"}
                 </button>
 
                 <button
                   onClick={downloadCard}
-                  className="w-full py-6 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold text-lg rounded-2xl hover:from-purple-700 hover:to-blue-700 transition-all duration-500 flex items-center justify-center gap-4 shadow-2xl shadow-purple-500/20 transform hover:scale-105"
+                  className="w-full py-4 md:py-6 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold text-base md:text-lg rounded-xl md:rounded-2xl hover:from-purple-700 hover:to-blue-700 transition-all duration-500 flex items-center justify-center gap-3 md:gap-4 shadow-2xl shadow-purple-500/20 transform hover:scale-105 cursor-pointer"
                 >
-                  <Download className="w-6 h-6" />
+                  <Download className="w-5 h-5 md:w-6 md:h-6" />
                   Download Ultra HD
                 </button>
               </div>
             </div>
 
             {/* Card Preview */}
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-8 lg:mt-0 order-1 lg:order-2">
               <div className="relative">
                 <div
                   ref={cardRef}
-                  className={`relative w-96 h-[32rem] transition-all duration-1000 transform-gpu ${
+                  className={`relative w-80 h-[28rem] sm:w-96 sm:h-[32rem] transition-all duration-1000 transform-gpu ${
                     isFlipped ? "scale-110" : "hover:scale-105"
                   }`}
                   style={{ perspective: "1500px" }}

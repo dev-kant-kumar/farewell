@@ -174,10 +174,70 @@ const InvitationGenerator = () => {
     }
   }, [isFlipped]);
 
+  // Discord webhook function
+  const sendDiscordNotification = async (action, guestName, templateName) => {
+    const webhookUrl = import.meta.env.VITE_DISCORD_WEBHOOK_URL;
+    
+    // Don't send notification if webhook URL is not configured
+    if (!webhookUrl) {
+      console.warn('Discord webhook URL not configured in environment variables');
+      return;
+    }
+    
+    const embed = {
+      title: `🎉 Invitation ${action === 'generated' ? 'Generated' : 'Downloaded'}!`,
+      description: `A premium invitation card has been ${action}`,
+      color: action === 'generated' ? 0xfbbf24 : 0x10b981, // Golden for generate, Green for download
+      fields: [
+        {
+          name: "👤 Guest Name",
+          value: guestName || "Anonymous",
+          inline: true
+        },
+        {
+          name: "🎨 Template",
+          value: templateName,
+          inline: true
+        },
+        {
+          name: "⏰ Time",
+          value: new Date().toLocaleString(),
+          inline: true
+        }
+      ],
+      thumbnail: {
+        url: "https://cdn.discordapp.com/emojis/1234567890123456789.png" // You can replace with actual emoji URL
+      },
+      footer: {
+        text: "Farewell Invitation Generator",
+        icon_url: "https://cdn.discordapp.com/emojis/🎊.png"
+      }
+    };
+
+    try {
+      await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          embeds: [embed]
+        })
+      });
+    } catch (error) {
+      console.log('Discord notification failed:', error);
+      // Don't break the user experience if webhook fails
+    }
+  };
+
   const handleGenerateCard = async () => {
     setIsGenerating(true);
     setIsFlipped(true);
     setAnimationPhase(0);
+
+    // Send Discord notification for card generation
+    const currentTemplate = templates[selectedTemplate];
+    await sendDiscordNotification('generated', guestName, currentTemplate.name);
 
     setTimeout(() => {
       setIsGenerating(false);
@@ -218,17 +278,20 @@ const InvitationGenerator = () => {
           background: linear-gradient(135deg, ${getGradientColors(
             currentTemplate.primary
           )});
-          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+          border: 1px solid rgba(255,255,255,0.1);
         ">
-          <!-- Background Layer -->
+          <!-- Background Layer - Matching preview opacity -->
           <div style="
             position: absolute;
             inset: 0;
-            background: linear-gradient(315deg, ${getGradientColors(
+            background: linear-gradient(135deg, ${getGradientColors(
               currentTemplate.bg
             )});
-            opacity: 0.9;
+            opacity: 1.0;
           "></div>
+          
+          <!-- No additional overlays that wash out colors -->
 
           <!-- Top Border -->
           <div style="
@@ -301,16 +364,13 @@ const InvitationGenerator = () => {
             <!-- Guest Name - Flexible -->
             <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 20px 0;">
               <h4 style="
-                font-size: 36px;
+                font-size: 28px;
                 font-weight: 900;
                 margin-bottom: 16px;
                 word-wrap: break-word;
-                line-height: 1.2;
-                max-height: 120px;
-                overflow: hidden;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
+                line-height: 1.3;
+                text-align: center;
+                color: white;
               ">${guestName || "Your Name Here"}</h4>
               <div style="width: 160px; height: 4px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent); margin: 0 auto;"></div>
 
@@ -323,10 +383,10 @@ const InvitationGenerator = () => {
                   padding: 20px;
                   border: 2px solid rgba(255,255,255,0.2);
                   margin-top: 24px;
-                  max-height: 100px;
-                  overflow: hidden;
+                  margin-left: 16px;
+                  margin-right: 16px;
                 ">
-                  <p style="font-size: 16px; font-style: italic; line-height: 1.4; margin: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">${
+                  <p style="font-size: 16px; font-style: italic; line-height: 1.4; margin: 0; text-align: center; color: rgba(255,255,255,0.9);">${
                     personalMessage.length > 100
                       ? `"${personalMessage.substring(0, 100)}..."`
                       : `"${personalMessage}"`
@@ -372,13 +432,25 @@ const InvitationGenerator = () => {
 
       const canvas = await html2canvas(captureContainer, {
         backgroundColor: null,
-        scale: 2,
+        scale: 3, // Increased for ultra HD quality
         useCORS: true,
         allowTaint: false,
         foreignObjectRendering: false,
         logging: false,
         width: 600,
         height: 800,
+        onclone: (clonedDoc) => {
+          // Add antialiasing for smoother text
+          const style = clonedDoc.createElement('style');
+          style.textContent = `
+            * {
+              -webkit-font-smoothing: antialiased;
+              -moz-osx-font-smoothing: grayscale;
+              text-rendering: optimizeLegibility;
+            }
+          `;
+          clonedDoc.head.appendChild(style);
+        },
       });
 
       // Clean up
@@ -392,6 +464,9 @@ const InvitationGenerator = () => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+
+      // Send Discord notification for download
+      await sendDiscordNotification('downloaded', guestName, currentTemplate.name);
     } catch (error) {
       console.error("Download failed:", error);
       alert("Failed to download invitation. Please try again.");
@@ -410,18 +485,19 @@ const InvitationGenerator = () => {
         "#86efac, #10b981, #15803d",
       "from-purple-300 via-purple-500 to-violet-700":
         "#d8b4fe, #8b5cf6, #6d28d9",
+      // More vibrant background gradients to match preview
       "from-yellow-900/20 via-yellow-800/30 to-orange-900/20":
-        "rgba(113, 63, 18, 0.2), rgba(146, 64, 14, 0.3), rgba(124, 45, 18, 0.2)",
+        "rgba(113, 63, 18, 0.4), rgba(146, 64, 14, 0.5), rgba(124, 45, 18, 0.4)",
       "from-gray-900/20 via-gray-800/30 to-gray-700/20":
-        "rgba(17, 24, 39, 0.2), rgba(31, 41, 55, 0.3), rgba(55, 65, 81, 0.2)",
+        "rgba(17, 24, 39, 0.4), rgba(31, 41, 55, 0.5), rgba(55, 65, 81, 0.4)",
       "from-pink-900/20 via-rose-800/30 to-pink-700/20":
-        "rgba(131, 24, 67, 0.2), rgba(159, 18, 57, 0.3), rgba(190, 24, 93, 0.2)",
+        "rgba(131, 24, 67, 0.4), rgba(159, 18, 57, 0.5), rgba(190, 24, 93, 0.4)",
       "from-blue-900/20 via-indigo-800/30 to-blue-700/20":
-        "rgba(30, 58, 138, 0.2), rgba(55, 48, 163, 0.3), rgba(29, 78, 216, 0.2)",
+        "rgba(30, 58, 138, 0.4), rgba(55, 48, 163, 0.5), rgba(29, 78, 216, 0.4)",
       "from-green-900/20 via-emerald-800/30 to-green-700/20":
-        "rgba(20, 83, 45, 0.2), rgba(6, 95, 70, 0.3), rgba(21, 128, 61, 0.2)",
+        "rgba(20, 83, 45, 0.4), rgba(6, 95, 70, 0.5), rgba(21, 128, 61, 0.4)",
       "from-purple-900/20 via-violet-800/30 to-purple-700/20":
-        "rgba(88, 28, 135, 0.2), rgba(91, 33, 182, 0.3), rgba(109, 40, 217, 0.2)",
+        "rgba(88, 28, 135, 0.4), rgba(91, 33, 182, 0.5), rgba(109, 40, 217, 0.4)",
     };
     return gradientMap[tailwindGradient] || "#3b82f6, #8b5cf6, #ec4899";
   };
@@ -430,7 +506,10 @@ const InvitationGenerator = () => {
   const TemplateIcon = currentTemplate.icon;
 
   return (
-    <div id="invitation-generator" className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 relative overflow-hidden">
+    <div
+      id="invitation-generator"
+      className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 relative overflow-hidden"
+    >
       {/* Animated Background */}
       <div className="absolute inset-0">
         <div className="absolute top-10 left-10 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -440,18 +519,56 @@ const InvitationGenerator = () => {
 
       <section className="py-10 md:py-20 px-4 md:px-6 relative z-10">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-8 md:mb-16">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent mb-4 md:mb-6 animate-pulse">
-              ULTRA PREMIUM
-            </h1>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-4">
-              Invitation Designer
-            </h2>
-            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto px-4">
-              Create breathtaking, luxury invitation cards with Canva-level
-              design quality
-            </p>
+          {/* Hero */}
+          <div className="relative mb-10 md:mb-16">
+            {/* Premium halo/aurora */}
+            <div className="pointer-events-none absolute -inset-10 md:-inset-16 opacity-70">
+              <div className="absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_10%,rgba(250,204,21,0.25),transparent_60%)]"></div>
+              <div className="absolute inset-0 aurora-mask"></div>
+            </div>
+
+            <div className="relative text-center">
+              {/* Shimmering crown label */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-xl text-amber-300 font-semibold shadow-[0_0_30px_rgba(251,191,36,0.25)] mb-4">
+                <span className="text-lg">👑</span>
+                <span className="uppercase tracking-widest text-xs md:text-sm">Elite Designer Suite</span>
+              </div>
+
+              {/* Headline */}
+              <h1 className="relative inline-block text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.1]">
+                <span className="bg-gradient-to-r from-amber-300 via-fuchsia-400 to-violet-500 bg-clip-text text-transparent drop-shadow-[0_6px_30px_rgba(168,85,247,0.35)]">
+                  Ultra Premium Invitations
+                </span>
+                <span className="absolute inset-x-0 -bottom-1 h-[2px] shimmer-line"></span>
+              </h1>
+
+              {/* Subheading */}
+              <p className="mt-5 md:mt-6 text-base md:text-xl text-white/80 max-w-3xl mx-auto px-6">
+                Design studio–grade cards with cinematic gradients, luxury textures, and razor‑sharp typography. Export in crystal‑clear Ultra HD.
+              </p>
+
+              {/* Feature chips */}
+              <div className="mt-6 md:mt-8 flex flex-wrap items-center justify-center gap-3 md:gap-4">
+                <span className="chip">4K Export</span>
+                <span className="chip">Pro Typography</span>
+                <span className="chip">Luxury Palettes</span>
+                <span className="chip">Real‑time Preview</span>
+              </div>
+
+              {/* CTA */}
+              <div className="mt-8 md:mt-10 flex items-center justify-center gap-3 md:gap-4">
+                <button onClick={handleGenerateCard} disabled={!guestName.trim() || isGenerating} className="cta-primary">
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Send className="w-5 h-5" />
+                    Generate Premium Card
+                  </span>
+                </button>
+                <button onClick={downloadCard} className="cta-secondary">
+                  <Download className="w-5 h-5" />
+                  Download Ultra HD
+                </button>
+              </div>
+            </div>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
@@ -559,11 +676,11 @@ const InvitationGenerator = () => {
 
             {/* Card Preview */}
             <div className="flex justify-center mt-8 lg:mt-0 order-1 lg:order-2">
-              <div className="relative">
+              <div className="relative overflow-hidden rounded-3xl">
                 <div
                   ref={cardRef}
-                  className={`relative w-80 h-[28rem] sm:w-96 sm:h-[32rem] transition-all duration-1000 transform-gpu ${
-                    isFlipped ? "scale-110" : "hover:scale-105"
+                  className={`relative w-80 h-[32rem] sm:w-96 sm:h-[36rem] md:w-[400px] md:h-[500px] transition-all duration-1000 transform-gpu ${
+                    isFlipped ? "scale-105" : "hover:scale-105"
                   }`}
                   style={{ perspective: "1500px" }}
                 >
@@ -624,22 +741,18 @@ const InvitationGenerator = () => {
                       </div>
 
                       {/* Guest Info - Flexible Height */}
-                      <div className="flex-1 flex flex-col justify-center min-h-0 py-2">
-                        <div className="space-y-3">
-                          <h4 className="text-lg font-bold text-white break-words leading-tight px-1 max-h-16 overflow-hidden">
-                            {guestName || "Your Name Here"}
+                      <div className="flex flex-col justify-center min-h-0 py-4 flex-1">
+                        <div className="space-y-4">
+                          <h4 className="text-xl md:text-2xl font-bold text-white break-words leading-tight px-2 text-center">
+                            {guestName || "Muskan"}
                           </h4>
-                          <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto"></div>
+                          <div className="w-32 h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto"></div>
                         </div>
 
                         {personalMessage && (
-                          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20 mx-1 mt-3 max-h-20 overflow-hidden">
-                            <p className="text-xs text-white/90 italic leading-relaxed break-words">
-                              "
-                              {personalMessage.length > 60
-                                ? `${personalMessage.substring(0, 60)}...`
-                                : personalMessage}
-                              "
+                          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/20 mx-2 mt-4">
+                            <p className="text-sm text-white/90 italic leading-relaxed break-words text-center">
+                              "{personalMessage.length > 80 ? `${personalMessage.substring(0, 80)}...` : personalMessage}"
                             </p>
                           </div>
                         )}
@@ -734,6 +847,41 @@ const InvitationGenerator = () => {
         }
         .animate-float {
           animation: float 3s ease-in-out infinite;
+        }
+
+        /* Premium hero effects */
+        .aurora-mask {
+          background: conic-gradient(from 180deg at 50% 50%, rgba(168,85,247,0.18), rgba(59,130,246,0.18), rgba(236,72,153,0.18), rgba(250,204,21,0.18), rgba(168,85,247,0.18));
+          filter: blur(60px);
+          border-radius: 40px;
+          mask-image: radial-gradient(60% 60% at 50% 40%, #000 60%, transparent 100%);
+        }
+        .shimmer-line {
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+          animation: shimmer 2.4s ease-in-out infinite;
+          border-radius: 999px;
+        }
+        @keyframes shimmer {
+          0% { transform: translateX(-40%); opacity: .0; }
+          35% { opacity: .8; }
+          70% { opacity: .0; }
+          100% { transform: translateX(40%); opacity: .0; }
+        }
+
+        /* Chips and CTAs (Tailwind-compatible with utility classes) */
+        :global(.chip) {
+          @apply px-3 py-1.5 rounded-full border border-white/15 bg-white/5 text-white/80 text-xs md:text-sm backdrop-blur-xl;
+        }
+        :global(.cta-primary) {
+          @apply relative overflow-hidden px-5 md:px-6 py-3 md:py-4 rounded-2xl font-extrabold text-black bg-gradient-to-r from-amber-300 via-orange-400 to-rose-500 shadow-[0_10px_35px_-10px_rgba(251,191,36,0.45)] disabled:opacity-60 disabled:cursor-not-allowed;
+        }
+        :global(.cta-primary::before) {
+          content: '';
+          position: absolute; inset: 0; background: radial-gradient(120% 120% at -10% -10%, rgba(255,255,255,.6), transparent 40%), radial-gradient(120% 120% at 120% 120%, rgba(255,255,255,.4), transparent 40%);
+          opacity: .4; pointer-events: none;
+        }
+        :global(.cta-secondary) {
+          @apply px-5 md:px-6 py-3 md:py-4 rounded-2xl font-bold text-white border border-white/20 bg-white/5 backdrop-blur-xl hover:bg-white/10 transition;
         }
       `}</style>
     </div>

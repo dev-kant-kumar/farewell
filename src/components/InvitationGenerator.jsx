@@ -517,55 +517,65 @@ const InvitationGenerator = () => {
         <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
       </div>
 
-      <section className="py-10 md:py-20 px-4 md:px-6 relative z-10">
+      <section className="pt-8 sm:pt-10 md:pt-16 pb-10 md:pb-20 px-3 sm:px-4 md:px-6 relative z-10">
         <div className="max-w-7xl mx-auto">
           {/* Hero */}
           <div className="relative mb-10 md:mb-16">
             {/* Premium halo/aurora */}
-            <div className="pointer-events-none absolute -inset-10 md:-inset-16 opacity-70">
-              <div className="absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_10%,rgba(250,204,21,0.25),transparent_60%)]"></div>
+            <div className="pointer-events-none absolute -inset-6 sm:-inset-10 md:-inset-16 opacity-60 sm:opacity-70">
+              <div className="absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_12%,rgba(250,204,21,0.22),transparent_62%)]"></div>
               <div className="absolute inset-0 aurora-mask"></div>
             </div>
 
-            <div className="relative text-center">
+            <div className="relative text-center px-3 sm:px-4">
               {/* Shimmering crown label */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-xl text-amber-300 font-semibold shadow-[0_0_30px_rgba(251,191,36,0.25)] mb-4">
-                <span className="text-lg">👑</span>
-                <span className="uppercase tracking-widest text-xs md:text-sm">Elite Designer Suite</span>
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-xl text-amber-300 font-semibold shadow-[0_0_30px_rgba(251,191,36,0.25)] mb-3 sm:mb-4">
+                <span className="text-base sm:text-lg">👑</span>
+                <span className="uppercase tracking-widest text-[10px] sm:text-xs md:text-sm">Elite Designer Suite</span>
               </div>
 
               {/* Headline */}
-              <h1 className="relative inline-block text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.1]">
+              <h1 className="relative mx-auto max-w-[1100px] text-balance break-words text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-tight md:leading-[1.1]">
                 <span className="bg-gradient-to-r from-amber-300 via-fuchsia-400 to-violet-500 bg-clip-text text-transparent drop-shadow-[0_6px_30px_rgba(168,85,247,0.35)]">
                   Ultra Premium Invitations
                 </span>
-                <span className="absolute inset-x-0 -bottom-1 h-[2px] shimmer-line"></span>
+                <span className="absolute inset-x-6 sm:inset-x-12 -bottom-1 h-[2px] shimmer-line"></span>
               </h1>
 
               {/* Subheading */}
-              <p className="mt-5 md:mt-6 text-base md:text-xl text-white/80 max-w-3xl mx-auto px-6">
+              <p className="mt-4 md:mt-6 text-sm sm:text-base md:text-xl text-white/80 max-w-3xl mx-auto px-2 sm:px-6">
                 Design studio–grade cards with cinematic gradients, luxury textures, and razor‑sharp typography. Export in crystal‑clear Ultra HD.
               </p>
 
               {/* Feature chips */}
-              <div className="mt-6 md:mt-8 flex flex-wrap items-center justify-center gap-3 md:gap-4">
-                <span className="chip">4K Export</span>
-                <span className="chip">Pro Typography</span>
-                <span className="chip">Luxury Palettes</span>
-                <span className="chip">Real‑time Preview</span>
+              <div className="mt-5 md:mt-8 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 md:gap-4">
+                <span className="px-3 py-1.5 rounded-full border border-white/15 bg-white/5 text-white/80 text-[11px] sm:text-xs md:text-sm backdrop-blur-xl">4K Export</span>
+                <span className="px-3 py-1.5 rounded-full border border-white/15 bg-white/5 text-white/80 text-[11px] sm:text-xs md:text-sm backdrop-blur-xl">Pro Typography</span>
+                <span className="px-3 py-1.5 rounded-full border border-white/15 bg-white/5 text-white/80 text-[11px] sm:text-xs md:text-sm backdrop-blur-xl">Luxury Palettes</span>
+                <span className="px-3 py-1.5 rounded-full border border-white/15 bg-white/5 text-white/80 text-[11px] sm:text-xs md:text-sm backdrop-blur-xl">Real‑time Preview</span>
               </div>
 
               {/* CTA */}
-              <div className="mt-8 md:mt-10 flex items-center justify-center gap-3 md:gap-4">
-                <button onClick={handleGenerateCard} disabled={!guestName.trim() || isGenerating} className="cta-primary">
-                  <span className="relative z-10 flex items-center gap-2">
+              <div className="mt-7 md:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 md:gap-4 w-full max-w-2xl mx-auto">
+                <button
+                  onClick={handleGenerateCard}
+                  disabled={!guestName.trim() || isGenerating}
+                  className="relative overflow-hidden px-5 md:px-6 py-3 md:py-4 rounded-2xl font-extrabold text-black bg-gradient-to-r from-amber-300 via-orange-400 to-rose-500 shadow-[0_10px_35px_-10px_rgba(251,191,36,0.45)] disabled:opacity-60 disabled:cursor-not-allowed hover:from-amber-200 hover:to-rose-400 transition w-full sm:w-auto"
+                >
+                  <span className="relative z-10 flex items-center justify-center gap-2">
                     <Send className="w-5 h-5" />
                     Generate Premium Card
                   </span>
+                  <span className="pointer-events-none absolute inset-0 opacity-40" style={{background: "radial-gradient(120% 120% at -10% -10%, rgba(255,255,255,.6), transparent 40%), radial-gradient(120% 120% at 120% 120%, rgba(255,255,255,.4), transparent 40%)"}}></span>
                 </button>
-                <button onClick={downloadCard} className="cta-secondary">
-                  <Download className="w-5 h-5" />
-                  Download Ultra HD
+                <button
+                  onClick={downloadCard}
+                  className="px-5 md:px-6 py-3 md:py-4 rounded-2xl font-bold text-white border border-white/30 bg-white/10 backdrop-blur-xl hover:bg-white/15 transition w-full sm:w-auto"
+                >
+                  <span className="flex items-center justify-center">
+                    <Download className="w-5 h-5" />
+                    <span className="ml-2">Download Ultra HD</span>
+                  </span>
                 </button>
               </div>
             </div>
@@ -851,8 +861,8 @@ const InvitationGenerator = () => {
 
         /* Premium hero effects */
         .aurora-mask {
-          background: conic-gradient(from 180deg at 50% 50%, rgba(168,85,247,0.18), rgba(59,130,246,0.18), rgba(236,72,153,0.18), rgba(250,204,21,0.18), rgba(168,85,247,0.18));
-          filter: blur(60px);
+          background: conic-gradient(from 180deg at 50% 50%, rgba(168,85,247,0.16), rgba(59,130,246,0.16), rgba(236,72,153,0.16), rgba(250,204,21,0.16), rgba(168,85,247,0.16));
+          filter: blur(48px);
           border-radius: 40px;
           mask-image: radial-gradient(60% 60% at 50% 40%, #000 60%, transparent 100%);
         }
@@ -868,21 +878,7 @@ const InvitationGenerator = () => {
           100% { transform: translateX(40%); opacity: .0; }
         }
 
-        /* Chips and CTAs (Tailwind-compatible with utility classes) */
-        :global(.chip) {
-          @apply px-3 py-1.5 rounded-full border border-white/15 bg-white/5 text-white/80 text-xs md:text-sm backdrop-blur-xl;
-        }
-        :global(.cta-primary) {
-          @apply relative overflow-hidden px-5 md:px-6 py-3 md:py-4 rounded-2xl font-extrabold text-black bg-gradient-to-r from-amber-300 via-orange-400 to-rose-500 shadow-[0_10px_35px_-10px_rgba(251,191,36,0.45)] disabled:opacity-60 disabled:cursor-not-allowed;
-        }
-        :global(.cta-primary::before) {
-          content: '';
-          position: absolute; inset: 0; background: radial-gradient(120% 120% at -10% -10%, rgba(255,255,255,.6), transparent 40%), radial-gradient(120% 120% at 120% 120%, rgba(255,255,255,.4), transparent 40%);
-          opacity: .4; pointer-events: none;
-        }
-        :global(.cta-secondary) {
-          @apply px-5 md:px-6 py-3 md:py-4 rounded-2xl font-bold text-white border border-white/20 bg-white/5 backdrop-blur-xl hover:bg-white/10 transition;
-        }
+        /* Chips and CTAs are now styled via inline Tailwind utility classes in JSX for reliability across build setups. */
       `}</style>
     </div>
   );

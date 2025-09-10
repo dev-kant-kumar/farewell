@@ -186,23 +186,243 @@ const InvitationGenerator = () => {
 
   const downloadCard = async () => {
     if (!cardRef.current) return;
+
     try {
+      // Reset any animations before capture
+      setIsFlipped(false);
+      setAnimationPhase(0);
+
+      // Wait for animations to settle
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Create a clean capture container with proper dimensions
+      const captureContainer = document.createElement("div");
+      captureContainer.style.position = "absolute";
+      captureContainer.style.left = "-9999px";
+      captureContainer.style.top = "0";
+      captureContainer.style.width = "600px";
+      captureContainer.style.height = "800px";
+      captureContainer.style.background = "transparent";
+      document.body.appendChild(captureContainer);
+
+      // Create simplified card for download
+      const currentTemplate = templates[selectedTemplate];
+
+      captureContainer.innerHTML = `
+        <div style="
+          position: relative;
+          width: 600px;
+          height: 800px;
+          border-radius: 32px;
+          overflow: hidden;
+          background: linear-gradient(135deg, ${getGradientColors(
+            currentTemplate.primary
+          )});
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        ">
+          <!-- Background Layer -->
+          <div style="
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(315deg, ${getGradientColors(
+              currentTemplate.bg
+            )});
+            opacity: 0.9;
+          "></div>
+
+          <!-- Top Border -->
+          <div style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 12px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.6), rgba(255,255,255,0.3));
+          "></div>
+
+          <!-- Corner Decorations -->
+          <div style="position: absolute; top: 24px; left: 24px; width: 80px; height: 80px; border: 3px solid rgba(255,255,255,0.3); border-radius: 32px 0 32px 0;"></div>
+          <div style="position: absolute; top: 24px; right: 24px; width: 80px; height: 80px; border: 3px solid rgba(255,255,255,0.3); border-radius: 0 32px 0 32px;"></div>
+          <div style="position: absolute; bottom: 24px; left: 24px; width: 80px; height: 80px; border: 3px solid rgba(255,255,255,0.3); border-radius: 0 32px 0 32px;"></div>
+          <div style="position: absolute; bottom: 24px; right: 24px; width: 80px; height: 80px; border: 3px solid rgba(255,255,255,0.3); border-radius: 32px 0 32px 0;"></div>
+
+          <!-- Content -->
+          <div style="
+            position: relative;
+            z-index: 10;
+            padding: 48px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: center;
+            color: white;
+            font-family: system-ui, -apple-system, sans-serif;
+          ">
+            <!-- Header -->
+            <div style="flex-shrink: 0;">
+              <div style="display: flex; justify-content: center; margin-bottom: 32px;">
+                <div style="
+                  width: 120px;
+                  height: 120px;
+                  background: rgba(255,255,255,0.2);
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  border: 3px solid rgba(255,255,255,0.3);
+                  position: relative;
+                  font-size: 48px;
+                ">
+                  🎉
+                  <div style="
+                    position: absolute;
+                    top: -12px;
+                    right: -12px;
+                    width: 48px;
+                    height: 48px;
+                    background: linear-gradient(45deg, #fbbf24, #f97316);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 24px;
+                  ">✨</div>
+                </div>
+              </div>
+
+              <h3 style="font-size: 48px; font-weight: 900; margin-bottom: 16px; letter-spacing: 3px;">YOU'RE INVITED</h3>
+              <div style="display: flex; align-items: center; justify-content: center; gap: 24px; margin-bottom: 32px;">
+                <div style="height: 2px; background: rgba(255,255,255,0.4); flex: 1;"></div>
+                <span style="font-size: 32px;">👑</span>
+                <div style="height: 2px; background: rgba(255,255,255,0.4); flex: 1;"></div>
+              </div>
+            </div>
+
+            <!-- Guest Name -->
+            <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; margin: 32px 0;">
+              <h4 style="
+                font-size: 42px;
+                font-weight: 900;
+                margin-bottom: 24px;
+                word-wrap: break-word;
+                line-height: 1.2;
+                max-width: 100%;
+                overflow-wrap: break-word;
+                hyphens: auto;
+              ">${guestName || "Your Name Here"}</h4>
+              <div style="width: 200px; height: 6px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent); margin: 0 auto;"></div>
+
+              ${
+                personalMessage
+                  ? `
+                <div style="
+                  background: rgba(255,255,255,0.1);
+                  border-radius: 20px;
+                  padding: 24px;
+                  border: 2px solid rgba(255,255,255,0.2);
+                  margin-top: 32px;
+                  max-height: 120px;
+                  overflow: hidden;
+                ">
+                  <p style="font-size: 18px; font-style: italic; line-height: 1.5; margin: 0;">${
+                    personalMessage.length > 120
+                      ? `"${personalMessage.substring(0, 120)}..."`
+                      : `"${personalMessage}"`
+                  }</p>
+                </div>
+              `
+                  : ""
+              }
+            </div>
+
+            <!-- Event Details -->
+            <div style="flex-shrink: 0;">
+              <div style="
+                background: rgba(255,255,255,0.15);
+                border-radius: 24px;
+                padding: 32px;
+                border: 2px solid rgba(255,255,255,0.2);
+                margin-bottom: 24px;
+              ">
+                <h5 style="font-size: 28px; font-weight: bold; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 12px;">
+                  🎁 FAREWELL CELEBRATION
+                </h5>
+                <p style="font-size: 18px; opacity: 0.8; margin: 0;">An Evening of Memories & New Beginnings</p>
+              </div>
+
+              <div style="
+                font-size: 16px;
+                opacity: 0.6;
+                background: rgba(0,0,0,0.2);
+                border-radius: 16px;
+                padding: 16px;
+                border: 1px solid rgba(255,255,255,0.1);
+              ">
+                <p style="margin: 0; font-weight: 500;">🎓 Hosted by BCA (2023-25) for BCA (2022-25)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Import and use html2canvas with updated settings
       const { default: html2canvas } = await import("html2canvas");
-      const canvas = await html2canvas(cardRef.current, {
+
+      const canvas = await html2canvas(captureContainer, {
         backgroundColor: null,
-        scale: 3,
+        scale: 2,
         useCORS: true,
-        allowTaint: true,
-        foreignObjectRendering: true,
+        allowTaint: false,
+        foreignObjectRendering: false,
+        logging: false,
+        width: 600,
+        height: 800,
       });
+
+      // Clean up
+      document.body.removeChild(captureContainer);
+
+      // Download
       const dataUrl = canvas.toDataURL("image/png", 1.0);
       const link = document.createElement("a");
       link.download = `${guestName || "Guest"}_Premium_Invitation.png`;
       link.href = dataUrl;
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
     } catch (error) {
       console.error("Download failed:", error);
+      alert("Failed to download invitation. Please try again.");
     }
+  };
+
+  // Helper function to convert Tailwind gradients to CSS
+  const getGradientColors = (tailwindGradient) => {
+    const gradientMap = {
+      "from-yellow-300 via-yellow-500 to-yellow-700":
+        "#fde047, #eab308, #a16207",
+      "from-gray-200 via-gray-400 to-gray-600": "#e5e7eb, #9ca3af, #4b5563",
+      "from-pink-300 via-rose-400 to-pink-600": "#f9a8d4, #fb7185, #db2777",
+      "from-blue-300 via-blue-500 to-indigo-700": "#93c5fd, #3b82f6, #4338ca",
+      "from-green-300 via-emerald-500 to-green-700":
+        "#86efac, #10b981, #15803d",
+      "from-purple-300 via-purple-500 to-violet-700":
+        "#d8b4fe, #8b5cf6, #6d28d9",
+      "from-yellow-900/20 via-yellow-800/30 to-orange-900/20":
+        "rgba(113, 63, 18, 0.2), rgba(146, 64, 14, 0.3), rgba(124, 45, 18, 0.2)",
+      "from-gray-900/20 via-gray-800/30 to-gray-700/20":
+        "rgba(17, 24, 39, 0.2), rgba(31, 41, 55, 0.3), rgba(55, 65, 81, 0.2)",
+      "from-pink-900/20 via-rose-800/30 to-pink-700/20":
+        "rgba(131, 24, 67, 0.2), rgba(159, 18, 57, 0.3), rgba(190, 24, 93, 0.2)",
+      "from-blue-900/20 via-indigo-800/30 to-blue-700/20":
+        "rgba(30, 58, 138, 0.2), rgba(55, 48, 163, 0.3), rgba(29, 78, 216, 0.2)",
+      "from-green-900/20 via-emerald-800/30 to-green-700/20":
+        "rgba(20, 83, 45, 0.2), rgba(6, 95, 70, 0.3), rgba(21, 128, 61, 0.2)",
+      "from-purple-900/20 via-violet-800/30 to-purple-700/20":
+        "rgba(88, 28, 135, 0.2), rgba(91, 33, 182, 0.3), rgba(109, 40, 217, 0.2)",
+    };
+    return gradientMap[tailwindGradient] || "#3b82f6, #8b5cf6, #ec4899";
   };
 
   const currentTemplate = templates[selectedTemplate];
@@ -378,62 +598,66 @@ const InvitationGenerator = () => {
                     </div>
 
                     {/* Card Content */}
-                    <div className="relative z-10 p-8 h-full flex flex-col justify-between text-center">
-                      {/* Header */}
-                      <div>
-                        <div className="flex justify-center mb-6">
+                    <div className="relative z-10 p-6 h-full flex flex-col text-center">
+                      {/* Header - Fixed Height */}
+                      <div className="flex-shrink-0 mb-4">
+                        <div className="flex justify-center mb-4">
                           <div className="relative">
-                            <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm border-2 border-white/30">
-                              <PartyPopper className="w-10 h-10 text-white" />
+                            <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm border-2 border-white/30">
+                              <PartyPopper className="w-8 h-8 text-white" />
                             </div>
-                            <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
-                              <Sparkles className="w-4 h-4 text-white" />
+                            <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                              <Sparkles className="w-3 h-3 text-white" />
                             </div>
                           </div>
                         </div>
 
-                        <h3 className="text-3xl font-black text-white mb-2 tracking-wide">
+                        <h3 className="text-2xl font-black text-white mb-2 tracking-wide">
                           YOU'RE INVITED
                         </h3>
-                        <div className="flex items-center justify-center gap-4 mb-4">
+                        <div className="flex items-center justify-center gap-3 mb-3">
                           <div className="h-px bg-white/40 flex-1"></div>
-                          <TemplateIcon className="w-6 h-6 text-white/60" />
+                          <TemplateIcon className="w-5 h-5 text-white/60" />
                           <div className="h-px bg-white/40 flex-1"></div>
                         </div>
                       </div>
 
-                      {/* Guest Info */}
-                      <div className="space-y-6">
-                        <div>
-                          <h4 className="text-2xl font-bold text-white mb-2">
+                      {/* Guest Info - Flexible Height */}
+                      <div className="flex-1 flex flex-col justify-center min-h-0 py-2">
+                        <div className="space-y-3">
+                          <h4 className="text-lg font-bold text-white break-words leading-tight px-1 max-h-16 overflow-hidden">
                             {guestName || "Your Name Here"}
                           </h4>
-                          <div className="w-32 h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto"></div>
+                          <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto"></div>
                         </div>
 
                         {personalMessage && (
-                          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
-                            <p className="text-sm text-white/90 italic leading-relaxed">
-                              "{personalMessage}"
+                          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20 mx-1 mt-3 max-h-20 overflow-hidden">
+                            <p className="text-xs text-white/90 italic leading-relaxed break-words">
+                              "
+                              {personalMessage.length > 60
+                                ? `${personalMessage.substring(0, 60)}...`
+                                : personalMessage}
+                              "
                             </p>
                           </div>
                         )}
                       </div>
 
-                      {/* Event Details */}
-                      <div className="space-y-4">
-                        <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                          <h5 className="text-xl font-bold text-white mb-2 flex items-center justify-center gap-2">
-                            <Gift className="w-5 h-5" />
+                      {/* Event Details - Fixed Height */}
+                      <div className="flex-shrink-0 space-y-3">
+                        <div className="bg-white/15 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                          <h5 className="text-lg font-bold text-white mb-1 flex items-center justify-center gap-2">
+                            <Gift className="w-4 h-4" />
                             FAREWELL CELEBRATION
                           </h5>
-                          <p className="text-white/80 text-sm">
+                          <p className="text-white/80 text-xs">
                             An Evening of Memories & New Beginnings
                           </p>
                         </div>
 
                         {/* Party Info */}
-                        <div className="text-xs text-white/60 bg-black/20 rounded-xl p-3 backdrop-blur-sm border border-white/10">
+                        <div className="text-xs text-white/60 bg-black/20 rounded-lg p-2 backdrop-blur-sm border border-white/10">
                           <p className="font-medium">
                             🎓 Hosted by BCA (2023-25) for BCA (2022-25)
                           </p>

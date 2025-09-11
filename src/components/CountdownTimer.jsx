@@ -1,5 +1,5 @@
-import { Calendar, Clock, MapPin } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Calendar, Clock, MapPin, Volume2, VolumeX } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
 
 const CountdownTimer = () => {
   const [timeLeft, setTimeLeft] = useState({
@@ -9,7 +9,6 @@ const CountdownTimer = () => {
     seconds: 0,
   });
   const [isEventDay, setIsEventDay] = useState(false);
-  const [prevTime, setPrevTime] = useState({});
 
   // Calculate today at 12 PM (noon)
   const getEventDate = () => {
@@ -36,10 +35,7 @@ const CountdownTimer = () => {
         );
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-        const newTimeLeft = { days, hours, minutes, seconds };
-
-        setPrevTime(timeLeft);
-        setTimeLeft(newTimeLeft);
+        setTimeLeft({ days, hours, minutes, seconds });
       } else {
         setIsEventDay(true);
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -52,9 +48,7 @@ const CountdownTimer = () => {
     return () => clearInterval(timer);
   }, []); // Removed dependencies to prevent infinite re-renders
 
-  const TimeCard = ({ value, label, previousValue }) => {
-    const hasChanged = previousValue !== undefined && previousValue !== value;
-
+  const TimeCard = ({ value, label }) => {
     return (
       <div className="relative">
         <div className="bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-2xl">
@@ -63,11 +57,7 @@ const CountdownTimer = () => {
 
           <div className="relative z-10">
             {/* Number */}
-            <div
-              className={`text-5xl md:text-7xl font-bold text-center mb-2 transition-all duration-500 ${
-                hasChanged ? "animate-pulse text-yellow-400" : "text-white"
-              }`}
-            >
+            <div className="text-5xl md:text-7xl font-bold text-center mb-2 text-white transition-colors duration-300">
               {String(value).padStart(2, "0")}
             </div>
 
@@ -176,22 +166,18 @@ const CountdownTimer = () => {
           <TimeCard
             value={timeLeft.days}
             label="Days"
-            previousValue={prevTime.days}
           />
           <TimeCard
             value={timeLeft.hours}
             label="Hours"
-            previousValue={prevTime.hours}
           />
           <TimeCard
             value={timeLeft.minutes}
             label="Minutes"
-            previousValue={prevTime.minutes}
           />
           <TimeCard
             value={timeLeft.seconds}
             label="Seconds"
-            previousValue={prevTime.seconds}
           />
         </div>
 

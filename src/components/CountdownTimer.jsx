@@ -11,12 +11,11 @@ const CountdownTimer = () => {
   const [isEventDay, setIsEventDay] = useState(false);
   const [prevTime, setPrevTime] = useState({});
 
-  // Calculate tomorrow at 11 AM
+  // Calculate today at 12 PM (noon)
   const getEventDate = () => {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(11, 0, 0, 0); // Set to 11:00:00 AM
-    return tomorrow;
+    const today = new Date();
+    today.setHours(12, 0, 0, 0); // Set to 12:00:00 PM (noon)
+    return today;
   };
 
   const [eventDate] = useState(() => getEventDate());
@@ -97,22 +96,49 @@ const CountdownTimer = () => {
 
   if (isEventDay) {
     return (
-      <section className="py-20 px-6 relative" id="countdown">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="py-20 px-6 relative overflow-hidden bg-gradient-to-br from-purple-900 via-pink-900 to-red-900 min-h-screen" id="countdown">
+        {/* Animated Background */}
+        <div className="absolute inset-0 opacity-40">
+          <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-10 right-10 w-40 h-40 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-full blur-3xl animate-pulse delay-2000 -translate-x-1/2 -translate-y-1/2"></div>
+        </div>
+
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
           {/* Celebration Animation */}
           <div className="mb-8">
+            <div className="flex justify-center items-center gap-4 mb-4">
+              <div className="text-6xl animate-bounce delay-0">🎉</div>
+              <div className="text-6xl animate-bounce delay-100">🎊</div>
+              <div className="text-6xl animate-bounce delay-200">🥳</div>
+              <div className="text-6xl animate-bounce delay-300">🎉</div>
+            </div>
             <div className="relative inline-block">
-              <div className="text-8xl animate-bounce">🎉</div>
+              <div className="text-8xl animate-pulse">🔥</div>
               <div className="absolute inset-0 animate-ping">
-                <div className="text-8xl opacity-75">🎉</div>
+                <div className="text-8xl opacity-75">✨</div>
               </div>
             </div>
           </div>
 
-          <h2 className="text-6xl font-bold bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent mb-6">
-            It's Time!
+          <h2 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent mb-6 animate-pulse">
+            PARTY IS LIVE! 🔴
           </h2>
-          <p className="text-2xl text-white">The event is here! 🥳</p>
+          
+          <div className="bg-gradient-to-r from-red-500/20 to-pink-500/20 backdrop-blur-md rounded-2xl p-6 border border-red-400/30 shadow-2xl mb-8">
+            <p className="text-3xl font-bold text-white mb-2">🎪 THE FAREWELL PARTY IS HAPPENING NOW! 🎪</p>
+            <p className="text-xl text-gray-200">Join us for an amazing celebration! 🚀</p>
+          </div>
+
+          <div className="flex justify-center items-center gap-6 text-2xl">
+            <span className="animate-pulse">🎵</span>
+            <span className="text-white font-semibold">Music Playing</span>
+            <span className="animate-pulse">💃</span>
+            <span className="text-white font-semibold">People Dancing</span>
+            <span className="animate-pulse">🍰</span>
+            <span className="text-white font-semibold">Food Served</span>
+            <span className="animate-pulse">📸</span>
+          </div>
         </div>
       </section>
     );
@@ -136,12 +162,12 @@ const CountdownTimer = () => {
           <div className="flex items-center justify-center gap-3 mb-6">
             <Clock className="w-8 h-8 text-yellow-400 animate-spin" />
             <h2 className="text-5xl font-bold bg-gradient-to-r from-yellow-400 to-pink-500 bg-clip-text text-transparent">
-              Countdown to Tomorrow
+              Countdown to Party Time
             </h2>
             <Clock className="w-8 h-8 text-yellow-400 animate-spin" />
           </div>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Every second counts until 11:00 AM tomorrow
+            Every second counts until 12:00 PM today
           </p>
         </div>
 
@@ -198,7 +224,7 @@ const CountdownTimer = () => {
             <div className="flex flex-col items-center">
               <MapPin className="w-8 h-8 text-purple-400 mb-3" />
               <h3 className="text-lg font-semibold text-white mb-1">Event</h3>
-              <p className="text-gray-300">Tomorrow at 11 AM</p>
+              <p className="text-gray-300">Today at 12 PM</p>
             </div>
           </div>
         </div>
@@ -225,7 +251,7 @@ const CountdownTimer = () => {
             </div>
           </div>
           <p className="text-center text-gray-400 text-sm mt-2">
-            Progress to Tomorrow 11 AM
+            Progress to Today 12 PM
           </p>
         </div>
       </div>

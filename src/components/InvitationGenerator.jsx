@@ -177,13 +177,13 @@ const InvitationGenerator = () => {
   // Discord webhook function
   const sendDiscordNotification = async (action, guestName, templateName) => {
     const webhookUrl = import.meta.env.VITE_DISCORD_WEBHOOK_URL;
-    
+
     // Don't send notification if webhook URL is not configured
     if (!webhookUrl) {
       console.warn('Discord webhook URL not configured in environment variables');
       return;
     }
-    
+
     const embed = {
       title: `🎉 Invitation ${action === 'generated' ? 'Generated' : 'Downloaded'}!`,
       description: `A premium invitation card has been ${action}`,
@@ -290,7 +290,7 @@ const InvitationGenerator = () => {
             )});
             opacity: 1.0;
           "></div>
-          
+
           <!-- No additional overlays that wash out colors -->
 
           <!-- Top Border -->
@@ -754,7 +754,7 @@ const InvitationGenerator = () => {
                       <div className="flex flex-col justify-center min-h-0 py-4 flex-1">
                         <div className="space-y-4">
                           <h4 className="text-xl md:text-2xl font-bold text-white break-words leading-tight px-2 text-center">
-                            {guestName || "Muskan"}
+                            {guestName || "Your Name"}
                           </h4>
                           <div className="w-32 h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto"></div>
                         </div>

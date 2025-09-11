@@ -50,36 +50,36 @@ const CountdownTimer = () => {
 
   const TimeCard = ({ value, label }) => {
     return (
-      <div className="relative">
-        <div className="bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-2xl">
+      <div className="relative w-full">
+        <div className="bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-md rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-white/20 shadow-2xl min-h-[120px] lg:min-h-[140px] flex flex-col justify-center">
           {/* Glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-pink-400/20 rounded-2xl blur-xl opacity-75"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-pink-400/20 rounded-xl lg:rounded-2xl blur-xl opacity-75"></div>
 
           <div className="relative z-10">
             {/* Number */}
-            <div className="text-5xl md:text-7xl font-bold text-center mb-2 text-white transition-colors duration-300">
+            <div className="text-4xl sm:text-5xl lg:text-7xl font-bold text-center mb-2 text-white will-change-contents">
               {String(value).padStart(2, "0")}
             </div>
 
             {/* Label */}
-            <div className="text-center text-sm md:text-base font-medium text-gray-300 uppercase tracking-wider">
+            <div className="text-center text-xs sm:text-sm lg:text-base font-medium text-gray-300 uppercase tracking-wider">
               {label}
             </div>
 
             {/* Separator dots */}
             {label !== "Seconds" && (
-              <div className="absolute -right-3 top-1/2 transform -translate-y-1/2 hidden md:block">
+              <div className="absolute -right-2 lg:-right-3 top-1/2 transform -translate-y-1/2 hidden lg:block">
                 <div className="flex flex-col space-y-1">
-                  <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-                  <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse delay-500"></div>
+                  <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                  <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-yellow-400 rounded-full animate-pulse delay-500"></div>
                 </div>
               </div>
             )}
           </div>
         </div>
 
-        {/* Reflection effect */}
-        <div className="absolute inset-x-0 -bottom-6 h-6 bg-gradient-to-br from-white/10 to-transparent rounded-2xl blur-sm opacity-50 transform scale-y-[-1]"></div>
+        {/* Reflection effect - only show on larger screens to reduce complexity */}
+        <div className="absolute inset-x-0 -bottom-6 h-6 bg-gradient-to-br from-white/10 to-transparent rounded-xl lg:rounded-2xl blur-sm opacity-50 transform scale-y-[-1] hidden lg:block"></div>
       </div>
     );
   };
@@ -162,7 +162,7 @@ const CountdownTimer = () => {
         </div>
 
         {/* Countdown Display */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8 mb-12">
           <TimeCard
             value={timeLeft.days}
             label="Days"

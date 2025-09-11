@@ -1,5 +1,5 @@
-import { Calendar, Clock, MapPin, Volume2, VolumeX } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
+import { Calendar, Clock, MapPin } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const CountdownTimer = () => {
   const [timeLeft, setTimeLeft] = useState({
@@ -9,120 +9,6 @@ const CountdownTimer = () => {
     seconds: 0,
   });
   const [isEventDay, setIsEventDay] = useState(false);
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [audioContextInitialized, setAudioContextInitialized] = useState(false);
-  const [previousSeconds, setPreviousSeconds] = useState(-1);
-  const celebrationPlayedRef = useRef(false);
-  const audioContextRef = useRef(null);
-
-  // Initialize audio context on first user interaction
-  const initializeAudio = async () => {
-    if (!audioContextRef.current) {
-      try {
-        audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
-        
-        // Resume the context if it's suspended
-        if (audioContextRef.current.state === 'suspended') {
-          await audioContextRef.current.resume();
-        }
-        
-        setAudioContextInitialized(true);
-        console.log('Audio context initialized successfully');
-      } catch (error) {
-        console.error('Failed to initialize audio context:', error);
-      }
-    }
-  };
-
-  // Sound effects using Web Audio API
-  const playTick = async () => {
-    if (!soundEnabled) return;
-    
-    try {
-      await initializeAudio();
-      if (!audioContextRef.current) return;
-      
-      const oscillator = audioContextRef.current.createOscillator();
-      const gainNode = audioContextRef.current.createGain();
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContextRef.current.destination);
-      
-      oscillator.frequency.setValueAtTime(800, audioContextRef.current.currentTime);
-      oscillator.type = 'sine';
-      
-      gainNode.gain.setValueAtTime(0.3, audioContextRef.current.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContextRef.current.currentTime + 0.2);
-      
-      oscillator.start(audioContextRef.current.currentTime);
-      oscillator.stop(audioContextRef.current.currentTime + 0.2);
-    } catch (error) {
-      console.error('Failed to play tick sound:', error);
-    }
-  };
-
-  const playUrgentTick = async () => {
-    if (!soundEnabled) return;
-    
-    try {
-      await initializeAudio();
-      if (!audioContextRef.current) return;
-      
-      const oscillator = audioContextRef.current.createOscillator();
-      const gainNode = audioContextRef.current.createGain();
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContextRef.current.destination);
-      
-      oscillator.frequency.setValueAtTime(1200, audioContextRef.current.currentTime);
-      oscillator.type = 'square';
-      
-      gainNode.gain.setValueAtTime(0.4, audioContextRef.current.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContextRef.current.currentTime + 0.25);
-      
-      oscillator.start(audioContextRef.current.currentTime);
-      oscillator.stop(audioContextRef.current.currentTime + 0.25);
-    } catch (error) {
-      console.error('Failed to play urgent tick sound:', error);
-    }
-  };
-
-  const playCelebration = async () => {
-    if (!soundEnabled || celebrationPlayedRef.current) return;
-    celebrationPlayedRef.current = true;
-    
-    try {
-      await initializeAudio();
-      if (!audioContextRef.current) return;
-      
-      // Play a series of celebration notes
-      const notes = [523, 659, 784, 1047]; // C5, E5, G5, C6
-      notes.forEach((freq, index) => {
-        const oscillator = audioContextRef.current.createOscillator();
-        const gainNode = audioContextRef.current.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContextRef.current.destination);
-        
-        oscillator.frequency.setValueAtTime(freq, audioContextRef.current.currentTime + index * 0.3);
-        oscillator.type = 'sine';
-        
-        gainNode.gain.setValueAtTime(0.5, audioContextRef.current.currentTime + index * 0.3);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, audioContextRef.current.currentTime + index * 0.3 + 0.4);
-        
-        oscillator.start(audioContextRef.current.currentTime + index * 0.3);
-        oscillator.stop(audioContextRef.current.currentTime + index * 0.3 + 0.4);
-      });
-    } catch (error) {
-      console.error('Failed to play celebration sound:', error);
-    }
-  };
-
-  // Test sound function
-  const playTestSound = async () => {
-    await initializeAudio();
-    playTick();
-  };
 
   // Calculate today at 12 PM (noon)
   const getEventDate = () => {
@@ -149,27 +35,8 @@ const CountdownTimer = () => {
         );
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-        // Play sounds based on countdown state
-        if (previousSeconds !== seconds) {
-          const totalSeconds = days * 86400 + hours * 3600 + minutes * 60 + seconds;
-          
-          if (totalSeconds <= 10 && totalSeconds > 0) {
-            // Urgent ticking for last 10 seconds
-            playUrgentTick();
-          } else if (totalSeconds <= 60) {
-            // Normal tick for last minute
-            playTick();
-          }
-          
-          setPreviousSeconds(seconds);
-        }
-
         setTimeLeft({ days, hours, minutes, seconds });
       } else {
-        // Play celebration sound when event starts
-        if (!isEventDay) {
-          playCelebration();
-        }
         setIsEventDay(true);
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       }
@@ -281,36 +148,7 @@ const CountdownTimer = () => {
 
       <div className="relative z-10 max-w-6xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16 relative">
-          {/* Sound Controls */}
-          <div className="absolute top-0 right-0 flex gap-2">
-            {/* Test Sound Button */}
-            <button
-              onClick={playTestSound}
-              className="p-3 rounded-full transition-all duration-300 border-2 bg-blue-500/20 border-blue-500/30 text-blue-400 hover:bg-blue-500/30 backdrop-blur-sm hover:scale-110"
-              title="Test Sound (Click to activate audio)"
-            >
-              <span className="text-sm font-bold">♪</span>
-            </button>
-            
-            {/* Sound Toggle Button */}
-            <button
-              onClick={() => setSoundEnabled(!soundEnabled)}
-              className={`p-3 rounded-full transition-all duration-300 border-2 ${
-                soundEnabled
-                  ? "bg-yellow-500/20 border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/30"
-                  : "bg-gray-500/20 border-gray-500/30 text-gray-400 hover:bg-gray-500/30"
-              } backdrop-blur-sm hover:scale-110`}
-              title={soundEnabled ? "Disable Sound" : "Enable Sound"}
-            >
-              {soundEnabled ? (
-                <Volume2 className="w-6 h-6" />
-              ) : (
-                <VolumeX className="w-6 h-6" />
-              )}
-            </button>
-          </div>
-          
+        <div className="text-center mb-16">
           <div className="flex items-center justify-center gap-3 mb-6">
             <Clock className="w-8 h-8 text-yellow-400 animate-spin" />
             <h2 className="text-5xl font-bold bg-gradient-to-r from-yellow-400 to-pink-500 bg-clip-text text-transparent">
@@ -321,15 +159,6 @@ const CountdownTimer = () => {
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Every second counts until 12:00 PM today
           </p>
-          
-          {/* Sound Status Indicator */}
-          {soundEnabled && (
-            <div className="mt-4">
-              <p className="text-sm text-yellow-400 opacity-75">
-                🔊 Sound effects enabled - Listen for countdown ticks!
-              </p>
-            </div>
-          )}
         </div>
 
         {/* Countdown Display */}

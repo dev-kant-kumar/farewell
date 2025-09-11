@@ -32,22 +32,23 @@ Hazaribag`,
       ],
     },
     schedule: [
-      { time: "7:00 PM", event: "Welcome & Reception", icon: Users },
-      { time: "7:30 PM", event: "Dinner Service", icon: Gift },
-      { time: "8:30 PM", event: "Speeches & Memories", icon: Users },
-      { time: "9:00 PM", event: "Music & Dancing", icon: Music },
-      { time: "10:30 PM", event: "Photo Session", icon: Camera },
-      { time: "11:00 PM", event: "Farewell Toast", icon: Gift },
+      { time: "12:00 PM", event: "Welcome & Reception", icon: Users },
+      { time: "12:30 PM", event: "Lunch Service", icon: Gift },
+      { time: "1:30 PM", event: "Speeches & Memories", icon: Users },
+      { time: "2:00 PM", event: "Music & Dancing", icon: Music },
+      { time: "3:00 PM", event: "Games & Activities", icon: Users },
+      { time: "4:00 PM", event: "Photo Session", icon: Camera },
+      { time: "4:30 PM", event: "Farewell Toast", icon: Gift },
     ],
     dresscode: {
-      theme: "Cocktail Elegant",
+      theme: "Smart Casual",
       suggestions: [
-        "Semi-formal attire",
-        "Cocktail dresses",
-        "Suit & tie optional",
-        "Comfortable dancing shoes",
+        "Smart casual attire",
+        "Dress shirts & blouses",
+        "Casual dresses",
+        "Comfortable shoes",
       ],
-      colors: ["Deep blues", "Elegant blacks", "Metallics", "Jewel tones"],
+      colors: ["Bright colors", "Pastels", "Light blues", "Warm tones"],
     },
   };
 
@@ -94,7 +95,7 @@ Hazaribag`,
             Event Details
           </h2>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Everything you need to know for an unforgettable evening
+            Everything you need to know for an unforgettable afternoon
           </p>
         </div>
 
@@ -194,9 +195,8 @@ Hazaribag`,
                     ) : (
                       <iframe
                         src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7288.404618036583!2d85.378204!3d24.02393!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f49dbb8b09501b%3A0x4ab356742bc1c29a!2sMEHFIL%20BANQUET!5e0!3m2!1sen!2sin!4v1757496069291!5m2!1sen!2sin"
-                        width="600"
-                        height="450"
-                        style={{ border: 0 }}
+                        className="w-full h-full"
+                        style={{ border: 0, minHeight: '200px' }}
                         allowFullScreen
                         loading="lazy"
                         referrerPolicy="no-referrer-when-downgrade"
@@ -275,12 +275,12 @@ Hazaribag`,
                         <div
                           className={`w-12 h-12 mx-auto mb-2 rounded-full ${
                             index === 0
-                              ? "bg-blue-600"
+                              ? "bg-gradient-to-r from-red-400 to-pink-500"
                               : index === 1
-                              ? "bg-black"
+                              ? "bg-gradient-to-r from-pink-300 to-purple-300"
                               : index === 2
-                              ? "bg-gradient-to-r from-yellow-400 to-yellow-600"
-                              : "bg-gradient-to-r from-purple-600 to-pink-600"
+                              ? "bg-gradient-to-r from-sky-400 to-blue-500"
+                              : "bg-gradient-to-r from-orange-400 to-yellow-500"
                           }`}
                         ></div>
                         <span className="text-sm text-gray-300">{color}</span>
